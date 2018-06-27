@@ -23,11 +23,47 @@ public class ChatServer {
             authService = new BaseAuthService();
             authService.start();
             clients = new Vector<>();
+            while(true){
+                System.out.println("Waiting for connection...");
+                socket = server.accept();
+                System.out.println("Client connected...");
+                new ClientHandler(this,socket);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            try{
+                server.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            authService.stop();
         }
 
     }
+
+    public synchronized boolean isNickBusy(String nick){
+        for(ClientHandler client : clients ){
+            if(client.getName().equals(nick)){
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    public synchronized void broadCastMsg(String msg){
+        for(ClientHandler client : clients){
+            client.sendMsg(msg);
+        }
+    }
+
+    public synchronized void unsubscribe(ClientHandler client){
+        clients.remove(client);
+    }
+
+    public synchronized void subscribe(ClientHandler client){
+        clients.add(client);
+    }
+
 }
 
