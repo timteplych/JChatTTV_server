@@ -20,6 +20,9 @@ public class ChatServer {
         try {
             server = new ServerSocket(PORT);
             Socket socket = null;
+            authService = new BaseAuthService();
+            authService.start();
+            clients = new Vector<>();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
