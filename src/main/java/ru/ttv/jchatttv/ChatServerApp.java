@@ -8,6 +8,6 @@ public class ChatServerApp
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        ChatServer chatServer = new ChatServer();
     }
 }

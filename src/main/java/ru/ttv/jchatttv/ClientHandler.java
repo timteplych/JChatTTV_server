@@ -27,6 +27,7 @@ public class ClientHandler {
                 try{
                     while(true){//цикл автоизации
                         String str = inputStream.readUTF();
+                        System.out.println(str);
                         if(str.startsWith("/auth")){
                             String[] parts = str.split("\\s");
                             String nick = chatServer.getAuthService().getNickByLoginPass(parts[1],parts[2]);
@@ -34,7 +35,7 @@ public class ClientHandler {
                                 if(!chatServer.isNickBusy(nick)){
                                     sendMsg("/authok "+nick);
                                     name = nick;
-                                    chatServer.broadCastMsg(name + " зашел в чат");
+                                    chatServer.broadCastMsg(name + " connected to chat");
                                     chatServer.subscribe(this);
                                     break;
                                 }else{
@@ -45,19 +46,26 @@ public class ClientHandler {
                             }
                         }
                     }
-                    while(true){//Цикл получения сообщений
+                    while(true){//message recieving loop
                         String str = inputStream.readUTF();
                         System.out.println(" от "+name+": "+str);
                         if(str.equals("/end")){
                             break;
                         }
-                        chatServer.broadCastMsg(name+": "+str);
+                        if(str.startsWith("/w")){
+                            String[] parts = str.split("\\s",3);
+                            if(parts.length == 3){
+                                chatServer.singleCastMsg(parts[1],parts[2]);
+                            }
+                        }else{
+                            chatServer.broadCastMsg(name+": "+str);
+                        }
                     }
                 }catch(IOException e){
                     e.printStackTrace();
                 }finally{
                     chatServer.unsubscribe(this);
-                    chatServer.broadCastMsg(name + " вышел из чата");
+                    chatServer.broadCastMsg(name + " left this chat");
                     try {
                         socket.close();
                     }catch (IOException e){

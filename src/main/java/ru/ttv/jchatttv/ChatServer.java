@@ -57,6 +57,15 @@ public class ChatServer {
         }
     }
 
+    public synchronized void singleCastMsg(String nick, String msg){
+        for(ClientHandler client : clients){
+            if(client.getName().equals(nick)){
+                client.sendMsg(msg);
+                break;
+            }
+        }
+    }
+
     public synchronized void unsubscribe(ClientHandler client){
         clients.remove(client);
     }
