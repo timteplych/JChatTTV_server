@@ -32,7 +32,7 @@ public class ClientHandler {
             this.name = "";
             new Thread(()->{
                 try{
-                    while(true){//цикл автоизации
+                    while(true){//authorization loop
                         String str = inputStream.readUTF();
                         System.out.println(str);
                         if( str.startsWith(AUTH_STRING)){
@@ -46,7 +46,7 @@ public class ClientHandler {
                                     chatServer.subscribe(this);
                                     break;
                                 }else{
-                                    sendMsg("Account is used already");
+                                    sendMsg("Account is busy");
                                 }
                             }else {
                                 sendMsg("Incorrect login or password...");
@@ -65,9 +65,9 @@ public class ClientHandler {
                                 if (parts.length == 3) {
                                     chatServer.singleCastMsg(this,parts[1], parts[2]);
                                 }
-                            } else {
-                                chatServer.broadcastMsg(name + ": " + str);
                             }
+                        } else {
+                            chatServer.broadcastMsg(name + ": " + str);
                         }
                     }
                 } catch (IOException e) {
