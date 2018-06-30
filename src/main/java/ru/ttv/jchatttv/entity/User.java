@@ -1,4 +1,4 @@
-package ru.ttv.jchatttv;
+package ru.ttv.jchatttv.entity;
 
 public class User {
     private String login;

@@ -1,5 +1,7 @@
 package ru.ttv.jchatttv;
 
+import ru.ttv.jchatttv.entity.ChatServer;
+
 /**
  * @author Teplykh Timofey
  * @date June 27 2018

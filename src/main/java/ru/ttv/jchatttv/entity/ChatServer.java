@@ -1,4 +1,8 @@
-package ru.ttv.jchatttv;
+package ru.ttv.jchatttv.entity;
+
+import ru.ttv.jchatttv.AuthService;
+import ru.ttv.jchatttv.BaseAuthService;
+import ru.ttv.jchatttv.ClientHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -62,9 +66,10 @@ public class ChatServer {
             if(client.getName().equals(nick)){
                 client.sendMsg(msg);
                 from.sendMsg("To user "+nick+": "+msg);
-                break;
+                return;
             }
         }
+        from.sendMsg("There is no user with nick "+nick+" in this chat room");
     }
 
     public synchronized void unsubscribe(ClientHandler client){

@@ -1,5 +1,7 @@
 package ru.ttv.jchatttv;
 
+import ru.ttv.jchatttv.entity.ChatServer;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
