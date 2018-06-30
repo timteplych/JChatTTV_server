@@ -11,6 +11,11 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String name;
+    private static final String START_SYMBOL = "/";
+    private static final String END_STRING = "/end";
+    private static final String AUTH_STRING = "/auth";
+    private static final String AUTH_OK_STRING = "/authok ";
+    private static final String SINGLE_CAST_STRING = "/w";
 
     public String getName() {
         return name;
@@ -28,12 +33,12 @@ public class ClientHandler {
                     while(true){//цикл автоизации
                         String str = inputStream.readUTF();
                         System.out.println(str);
-                        if(str.startsWith("/auth")){
+                        if( str.startsWith(AUTH_STRING)){
                             String[] parts = str.split("\\s");
                             String nick = chatServer.getAuthService().getNickByLoginPass(parts[1],parts[2]);
                             if(nick != null){
                                 if(!chatServer.isNickBusy(nick)){
-                                    sendMsg("/authok "+nick);
+                                    sendMsg(AUTH_OK_STRING+nick);
                                     name = nick;
                                     chatServer.broadCastMsg(name + " connected to chat");
                                     chatServer.subscribe(this);
@@ -46,24 +51,26 @@ public class ClientHandler {
                             }
                         }
                     }
-                    while(true){//message recieving loop
+                    while (true) {//message recieving loop
                         String str = inputStream.readUTF();
-                        System.out.println(" от "+name+": "+str);
-                        if(str.equals("/end")){
-                            break;
-                        }
-                        if(str.startsWith("/w")){
-                            String[] parts = str.split("\\s",3);
-                            if(parts.length == 3){
-                                chatServer.singleCastMsg(parts[1],parts[2]);
+                        //System.out.println(" от "+name+": "+str);
+                        if (str.startsWith(START_SYMBOL)) {
+                            if (END_STRING.equals(str)) {
+                                break;
                             }
-                        }else{
-                            chatServer.broadCastMsg(name+": "+str);
+                            if (str.startsWith(SINGLE_CAST_STRING)) {
+                                String[] parts = str.split("\\s", 3);
+                                if (parts.length == 3) {
+                                    chatServer.singleCastMsg(this,parts[1], parts[2]);
+                                }
+                            } else {
+                                chatServer.broadCastMsg(name + ": " + str);
+                            }
                         }
                     }
-                }catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                }finally{
+                } finally {
                     chatServer.unsubscribe(this);
                     chatServer.broadCastMsg(name + " left this chat");
                     try {

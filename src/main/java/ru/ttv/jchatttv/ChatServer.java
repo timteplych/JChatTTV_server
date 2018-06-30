@@ -57,10 +57,11 @@ public class ChatServer {
         }
     }
 
-    public synchronized void singleCastMsg(String nick, String msg){
+    public synchronized void singleCastMsg(ClientHandler from, String nick, String msg){
         for(ClientHandler client : clients){
             if(client.getName().equals(nick)){
                 client.sendMsg(msg);
+                from.sendMsg("To user "+nick+": "+msg);
                 break;
             }
         }
