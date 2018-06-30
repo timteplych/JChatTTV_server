@@ -42,7 +42,7 @@ public class ClientHandler {
                                 if(!chatServer.isNickBusy(nick)){
                                     sendMsg(AUTH_OK_STRING+nick);
                                     name = nick;
-                                    chatServer.broadCastMsg(name + " connected to chat");
+                                    chatServer.broadcastMsg(name + " connected to chat");
                                     chatServer.subscribe(this);
                                     break;
                                 }else{
@@ -66,7 +66,7 @@ public class ClientHandler {
                                     chatServer.singleCastMsg(this,parts[1], parts[2]);
                                 }
                             } else {
-                                chatServer.broadCastMsg(name + ": " + str);
+                                chatServer.broadcastMsg(name + ": " + str);
                             }
                         }
                     }
@@ -74,7 +74,7 @@ public class ClientHandler {
                     e.printStackTrace();
                 } finally {
                     chatServer.unsubscribe(this);
-                    chatServer.broadCastMsg(name + " left this chat");
+                    chatServer.broadcastMsg(name + " left this chat");
                     try {
                         socket.close();
                     }catch (IOException e){

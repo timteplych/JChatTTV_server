@@ -55,10 +55,18 @@ public class ChatServer {
         return  false;
     }
 
-    public synchronized void broadCastMsg(String msg){
+    public synchronized void broadcastMsg(String msg){
         for(ClientHandler client : clients){
             client.sendMsg(msg);
         }
+    }
+
+    public synchronized void broadcastClientList(){
+        StringBuilder sb = new StringBuilder("/clients ");
+        for(ClientHandler client : clients){
+            sb.append(client.getName()+" ");
+        }
+        broadcastMsg(sb.toString());
     }
 
     public synchronized void singleCastMsg(ClientHandler from, String nick, String msg){
@@ -74,10 +82,12 @@ public class ChatServer {
 
     public synchronized void unsubscribe(ClientHandler client){
         clients.remove(client);
+        broadcastClientList();
     }
 
     public synchronized void subscribe(ClientHandler client){
         clients.add(client);
+        broadcastClientList();
     }
 
 }
