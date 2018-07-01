@@ -49,7 +49,7 @@ public class ClientHandler {
                         String str = inputStream.readUTF();
                         System.out.println(str);
                         if(str.startsWith(END_AUTHORIZATION_STRING)){
-                            sendMsg("/end");
+                            sendMsg(END_STRING);
                             break;
                         }
                         if (str.startsWith(AUTH_STRING)) {
